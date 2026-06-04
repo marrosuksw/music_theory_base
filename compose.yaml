@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # MySQL Database Container
+  db:
+    image: mysql:8.0
+    container_name: music_db_mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: music_learner_user
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # Your Spring Boot App Container
+  app:
+    build: .
+    container_name: music_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      # Note the 'db' hostname and the 3306 port
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/music_learner?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: user_admin
+      SPRING_DATASOURCE_PASSWORD: root_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+
+volumes:
+  mysql_data:
