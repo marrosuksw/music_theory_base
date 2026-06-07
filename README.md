@@ -3,4 +3,9 @@
 ### Summary: ###
 #### The aim of this application is to provide a solid base of knowledge about different parts of music theory: notes, intervals, chords, scales and their different modes. ####
 ### Tech: ###
-WIP
+#### Backend ####
+##### Java Spring Boot with Hibernate #####
+##### JUnit 5 for unit testing #####
+#### Frontend ####
+##### TBD #####
+
