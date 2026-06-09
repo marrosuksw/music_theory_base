@@ -1,4 +1,4 @@
-package pl.marros.music_learner.note;
+package pl.marros.music_learner.intervals;
 
 import lombok.Getter;
 

@@ -1,22 +1,22 @@
-package pl.marros.music_learner.note;
+package pl.marros.music_learner.intervals;
 
 
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 
 /*
 * Responsible for:
-*   - Calculating intervals -> fetch Perfect Fifth based on a given note
-*   - Putting together scales based on fetchInterval methods
-*   -
+*   - Calculating intervals -> fetch Perfect Fifth based on a given note and interval with getIntervalNote
+*   - shiftSemitones base method
+*
 * */
-@RequiredArgsConstructor
-//Perhaps change the name to be more descriptive, like MusicIntervalsEngine
-public class MusicTheoryEngine {
+@NoArgsConstructor
+public class MusicIntervalsEngine {
 
     private static final int MAX_SEMITONE_SHIFT_RIGHT = 11;
     private static final int MAX_SEMITONE_SHIFT_LEFT = -11;
 
+    // Think about refactoring this method to accept a MusicNotes argument instead of a String
     public MusicNotes shiftSemitones(String name, int shift){
         if (shift < MAX_SEMITONE_SHIFT_LEFT || shift > MAX_SEMITONE_SHIFT_RIGHT)
             throw new IllegalArgumentException("Note shift cannot be greater than 11 and lower than -11. Provided: " + shift);
