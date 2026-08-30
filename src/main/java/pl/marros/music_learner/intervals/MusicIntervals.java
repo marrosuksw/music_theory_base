@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum MusicIntervals {
-    //these intervals are a bit of a shortcut - they work perfectly for the major scale and a bit less for others
+    //Listed intervals with their most common names and the distance from the root note they represent in semitones
     UNISON(0),
     MINOR_SECOND(1),
     MAJOR_SECOND(2),
