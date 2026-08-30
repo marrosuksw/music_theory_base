@@ -4,7 +4,7 @@ import lombok.Getter;
 
 import java.util.EnumSet;
 
-// replacement for NoteCollection class !!!
+// In-memory collection of notes
 @Getter
 public enum MusicNotes {
 
@@ -14,7 +14,7 @@ public enum MusicNotes {
     Eb ("Eb", "D#", 3),
     E ("E", "No-alt", 4),
     F ("F", "No-alt", 5),
-    Gb("Gb", "F#", 6),
+    Gb("F#", "Gb", 6),
     G ("G", "No-alt", 7),
     Ab ("Ab", "G#", 8),
     A ("A", "No-alt", 9),
@@ -30,6 +30,7 @@ public enum MusicNotes {
         this.altName = altName;
         this.order = order;
     }
+    //returns: does the MusicNote contain the name in either primary name or alternative name
     public boolean containsName(String name){
         return name != null && (name.equalsIgnoreCase(this.getName()) || name.equalsIgnoreCase(this.getAltName()));
     }
