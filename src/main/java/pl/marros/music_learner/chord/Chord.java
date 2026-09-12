@@ -9,11 +9,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name="Chord")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-//
+// TBD - possible entity for chords saved by the user in a Notepad view
 public class Chord {
 
     @Id

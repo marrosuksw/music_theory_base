@@ -2,6 +2,7 @@ package pl.marros.music_learner.intervals;
 
 
 import lombok.NoArgsConstructor;
+import pl.marros.music_learner.notes.MusicNotes;
 
 
 /*

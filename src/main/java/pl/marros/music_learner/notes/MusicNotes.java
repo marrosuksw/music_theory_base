@@ -1,4 +1,4 @@
-package pl.marros.music_learner.intervals;
+package pl.marros.music_learner.notes;
 
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ public enum MusicNotes {
     Eb ("Eb", "D#", 3),
     E ("E", "No-alt", 4),
     F ("F", "No-alt", 5),
-    Gb("F#", "Gb", 6),
+    Gb("Gb", "F#", 6),
     G ("G", "No-alt", 7),
     Ab ("Ab", "G#", 8),
     A ("A", "No-alt", 9),
@@ -36,7 +36,7 @@ public enum MusicNotes {
     }
     // Cache it later for more optimized search
     public static MusicNotes findByName(String name){
-         return EnumSet.allOf(MusicNotes.class)
+        return EnumSet.allOf(MusicNotes.class)
                  .stream()
                  .filter(musicNotes -> musicNotes.containsName(name))
                  .findFirst()
