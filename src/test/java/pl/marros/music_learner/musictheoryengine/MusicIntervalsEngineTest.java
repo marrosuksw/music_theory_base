@@ -27,7 +27,12 @@ public class MusicIntervalsEngineTest {
         "Ab, 12, Ab",
         "Db, 0, Db",
         "F, -12, F",
-        "B, -4, G"
+        "B, -4, G",
+        "C, 13, Db",
+        "C, 481, Db",
+        "A, 23, Ab",
+        "B, -23, C",
+        "F, -1000, B"    // |(12 + (-1000) + 5)| % 12 = 11
     })
     void shouldShiftSemitoneByGivenAmount(String preShiftNoteName, int shift, String expectedShiftedNoteName){
         //when - semitone shift
@@ -35,7 +40,6 @@ public class MusicIntervalsEngineTest {
         MusicNotes expectedNote = MusicNotes.findByName(expectedShiftedNoteName);
         //then
         assertEquals(shiftedNote, expectedNote);
-
     }
 
 }
