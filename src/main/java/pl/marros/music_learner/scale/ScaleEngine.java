@@ -6,58 +6,74 @@ import org.springframework.stereotype.Component;
 import pl.marros.music_learner.intervals.MusicIntervals;
 import pl.marros.music_learner.intervals.MusicIntervalsEngine;
 import pl.marros.music_learner.notes.MusicNotes;
+import pl.marros.music_learner.scale.mode.Modes;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
+
+
 
 @Component
 @RequiredArgsConstructor
 public class ScaleEngine {
     //Responsible for methods that create scales of different modes
 
+    //TODO: must implement caching of looked up scales, set a fair timer etc.
+
     // Arrays of specific intervals for each scale mode, used for scale creation
-    private final MusicIntervals[] majorScaleRecipe = new MusicIntervals[] {
-                    MusicIntervals.UNISON, MusicIntervals.MAJOR_THIRD, MusicIntervals.MAJOR_SECOND, MusicIntervals.PERFECT_FOURTH,
-                    MusicIntervals.PERFECT_FIFTH, MusicIntervals.MAJOR_SIXTH, MusicIntervals.MAJOR_SEVENTH, MusicIntervals.PERFECT_OCTAVE
-                };
-    private final MusicIntervals[] minorScaleRecipe = new MusicIntervals[]{
-                    MusicIntervals.UNISON, MusicIntervals.PERFECT_OCTAVE, MusicIntervals.MAJOR_SECOND, MusicIntervals.MINOR_THIRD,
-                    MusicIntervals.PERFECT_FOURTH, MusicIntervals.PERFECT_FIFTH, MusicIntervals.MINOR_SIXTH, MusicIntervals.MINOR_SEVENTH
-                };
+    private final List<MusicIntervals> majorScaleRecipe = new ArrayList<>(List.of(MusicIntervals.UNISON, MusicIntervals.MAJOR_THIRD,
+            MusicIntervals.MAJOR_SECOND, MusicIntervals.PERFECT_FOURTH, MusicIntervals.PERFECT_FIFTH, MusicIntervals.MAJOR_SIXTH,
+            MusicIntervals.MAJOR_SEVENTH, MusicIntervals.PERFECT_OCTAVE));
+    private final List<MusicIntervals> minorScaleRecipe = new ArrayList<>(List.of(MusicIntervals.UNISON, MusicIntervals.PERFECT_OCTAVE,
+            MusicIntervals.MAJOR_SECOND, MusicIntervals.MINOR_THIRD, MusicIntervals.PERFECT_FOURTH, MusicIntervals.PERFECT_FIFTH,
+            MusicIntervals.MINOR_SIXTH, MusicIntervals.MINOR_SEVENTH));
+    private final List<MusicIntervals> dorianModeRecipe = new ArrayList<>(List.of(MusicIntervals.UNISON, MusicIntervals.PERFECT_OCTAVE,
+            MusicIntervals.MAJOR_SECOND, MusicIntervals.MINOR_THIRD, MusicIntervals.PERFECT_FOURTH, MusicIntervals.PERFECT_FIFTH,
+            MusicIntervals.MAJOR_SIXTH, MusicIntervals.MINOR_SEVENTH));
+    private final List<MusicIntervals> phrygianModeRecipe = List.of(new MusicIntervals[]{
+            MusicIntervals.UNISON, MusicIntervals.PERFECT_OCTAVE, MusicIntervals.MINOR_SECOND, MusicIntervals.MINOR_THIRD,
+            MusicIntervals.PERFECT_FOURTH, MusicIntervals.PERFECT_FIFTH, MusicIntervals.MINOR_SIXTH, MusicIntervals.MINOR_SEVENTH
+    });
+    private final List<MusicIntervals> lydianModeRecipe = List.of(new MusicIntervals[]{
+            MusicIntervals.UNISON, MusicIntervals.MAJOR_THIRD, MusicIntervals.MAJOR_SECOND, MusicIntervals.AUG_FOURTH_DIM_FIFTH,
+            MusicIntervals.PERFECT_FIFTH, MusicIntervals.MAJOR_SIXTH, MusicIntervals.MAJOR_SEVENTH, MusicIntervals.PERFECT_OCTAVE
+    });
+    private final List<MusicIntervals> mixolydianModeRecipe = List.of(new MusicIntervals[]{
+            MusicIntervals.UNISON, MusicIntervals.MAJOR_THIRD, MusicIntervals.MAJOR_SECOND, MusicIntervals.PERFECT_FOURTH,
+            MusicIntervals.PERFECT_FIFTH, MusicIntervals.MAJOR_SIXTH, MusicIntervals.MINOR_SEVENTH, MusicIntervals.PERFECT_OCTAVE
+    });
+    private final List<MusicIntervals> locrianModeRecipe = List.of(new MusicIntervals[]{
+            MusicIntervals.UNISON, MusicIntervals.PERFECT_OCTAVE, MusicIntervals.MINOR_SECOND, MusicIntervals.MINOR_THIRD,
+            MusicIntervals.PERFECT_FOURTH, MusicIntervals.AUG_FOURTH_DIM_FIFTH, MusicIntervals.MINOR_SIXTH, MusicIntervals.MINOR_SEVENTH
+    });
     private final MusicIntervalsEngine musicIntervalsEngine;
 
     public ScaleEngine(){
         this.musicIntervalsEngine = new MusicIntervalsEngine();
     }
-    //Major scale creation method (Ionian)
-    public Scale createMajor(MusicNotes root){
+
+    public Scale buildScale(MusicNotes root, Modes mode){
         try {
-            var mode = "major";
-            var majorScale = new Scale(mode, root.getName());
-            for (var interval : majorScaleRecipe) {
-                majorScale.add(interval, musicIntervalsEngine.getIntervalNote(root, interval));
+            List<MusicIntervals> chosenRecipe = switch (mode) {
+                case MAJOR -> List.copyOf(majorScaleRecipe);
+                case MINOR -> List.copyOf(minorScaleRecipe);
+                case DORIAN -> List.copyOf(dorianModeRecipe);
+                case PHRYGIAN -> List.copyOf(phrygianModeRecipe);
+                case MIXOLYDIAN -> List.copyOf(mixolydianModeRecipe);
+                case LYDIAN -> List.copyOf(lydianModeRecipe);
+                case LOCRIAN -> List.copyOf(locrianModeRecipe);
+                case null -> throw new IllegalArgumentException("ScaleEngine::createScale failure: Mode is null");
+            };
+            var scale = new Scale(mode.toString(), root.getName());
+            for (var interval : chosenRecipe) {
+                scale.add(interval, musicIntervalsEngine.getIntervalNote(root, interval));
             }
-            return majorScale;
+            return scale;
         }
         catch (NoSuchElementException e){
-            throw new IllegalArgumentException("ScaleEngine::createMajor() failure: root note doesn't exist.", e);
+            throw new IllegalArgumentException("ScaleEngine::createScale() failure: root note doesn't exist.", e);
         }
-    }
-    //(Aeolian) minor scale creation method
-    public Scale createAeolian(MusicNotes root){
-        try {
-            var mode="minor";
-            var minorScale = new Scale(mode, root.getName());
-            for(MusicIntervals interval : minorScaleRecipe){
-                minorScale.add(interval, musicIntervalsEngine.getIntervalNote(root, interval));
-            }
-            return minorScale;
-        } catch (NoSuchElementException e) {
-            throw new IllegalArgumentException("ScaleEngine::createMinor() failure: root note doesn't exist.", e);
-        }
-    }
-    //(Dorian mode)
-    public void createDorian(MusicNotes root){
-        ;
     }
     //TODO: Try to rethink what approach is best for scale queries
     // -> Fix the scale naming issue - it would look much better if (as it is IRL) there can only be one
