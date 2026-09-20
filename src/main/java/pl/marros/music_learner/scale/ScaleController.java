@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.marros.music_learner.notes.MusicNotes;
+import pl.marros.music_learner.scale.mode.Modes;
 
 @RestController
 @RequestMapping("/scale")
@@ -16,17 +17,9 @@ public class ScaleController {
     public ScaleController(ScaleEngine scaleEngine) {
         this.scaleEngine = scaleEngine;
     }
-
-    @GetMapping("/major/{name}")
-    public ResponseEntity<ScaleDTO> getMajorScale(@PathVariable String name){
-        var scale = scaleEngine.createMajor(MusicNotes.findByName(name));
-        var dto = new ScaleDTO(scale.getName(), scale.getMode(), scale.getScaleView());
-        return ResponseEntity.ok(dto);
-    }
-    @GetMapping("/minor/{name}")
-    public ResponseEntity<ScaleDTO> getMinorScale(@PathVariable String name) {
-        var scale = scaleEngine.createAeolian(MusicNotes.findByName(name));
-        var dto = new ScaleDTO(scale.getName(), scale.getMode(), scale.getScaleView());
-        return ResponseEntity.ok(dto);
+    @GetMapping("/{mode}/{name}")
+    public ResponseEntity<ScaleDTO> getScale(@PathVariable String mode, @PathVariable String name){
+        var scale = scaleEngine.buildScale(MusicNotes.findByName(name), Modes.valueOf(mode.toUpperCase()));
+        return ResponseEntity.ok(new ScaleDTO(scale.getName(), scale.getMode(), scale.getScaleView()));
     }
 }
