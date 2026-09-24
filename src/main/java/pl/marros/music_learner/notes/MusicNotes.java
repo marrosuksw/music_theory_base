@@ -12,7 +12,7 @@ public enum MusicNotes {
     Db ("Db", "C#", 1),
     D ("D","No-alt", 2),
     Eb ("Eb", "D#", 3),
-    E ("E", "No-alt", 4),
+    E ("E", "Fb", 4),
     F ("F", "No-alt", 5),
     Gb("Gb", "F#", 6),
     G ("G", "No-alt", 7),
@@ -30,18 +30,22 @@ public enum MusicNotes {
         this.altName = altName;
         this.order = order;
     }
-    //returns: does the MusicNote contain the name in either primary name or alternative name
+    //returns true if a note contains the given name in either primary name or alternative name
     public boolean containsName(String name){
         return name != null && (name.equalsIgnoreCase(this.getName()) || name.equalsIgnoreCase(this.getAltName()));
     }
-    // Cache it later for more optimized search
-    public static MusicNotes findByName(String name){
-        return EnumSet.allOf(MusicNotes.class)
-                 .stream()
-                 .filter(musicNotes -> musicNotes.containsName(name))
-                 .findFirst()
-                 .orElseThrow();
-    }
+//    //returns true if a note has an alt name
+//    public boolean hasAltName(){
+//        return this.altName != null && !this.altName.equals("No-alt");
+//    }
+//    // Cache it later for more optimized search
+//    public static MusicNotes findByName(String name){
+//        return EnumSet.allOf(MusicNotes.class)
+//                 .stream()
+//                 .filter(musicNotes -> musicNotes.containsName(name))
+//                 .findFirst()
+//                 .orElseThrow();
+//    }
     public static MusicNotes findByOrder(double order){
         return EnumSet.allOf(MusicNotes.class)
                 .stream()
